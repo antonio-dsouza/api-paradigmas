@@ -36,9 +36,9 @@ class TransactionRepositoryLocal {
             transaction.category = category;
             transaction.date = date;
             return "Transaction updated";
-        } else {
-            return "Transaction not found";
         }
+
+        return "Transaction not found";
     }
 
     async deleteTransaction({ id }: ITransactionDelete): Promise<any> {
@@ -46,9 +46,9 @@ class TransactionRepositoryLocal {
         if (index !== -1) {
             transactions.splice(index, 1);
             return "Transaction deleted";
-        } else {
-            return "Transaction not found";
         }
+
+        return "Transaction not found";
     }
 
     async getTransactions(): Promise<any> {
