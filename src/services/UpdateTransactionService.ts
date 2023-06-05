@@ -7,14 +7,15 @@ interface IRequest {
     description: String;
     value: Number;
     category: String;
+    action: String;
     date: String;
 }
 
 class UpdateTransactionService {
-    async execute({ description, value, category, date, id }: IRequest): Promise<String> {
+    async execute({ description, value, category, action, date, id }: IRequest): Promise<String> {
         const transactionRepository = process.env.DADOS == "mysql" ? new TransactionRepository() : new TransactionRepositoryLocal();
 
-        const result = await transactionRepository.updateTransaction({ description, value, category, date, id });
+        const result = await transactionRepository.updateTransaction({ description, value, category, action, date, id });
 
         return result;
     }

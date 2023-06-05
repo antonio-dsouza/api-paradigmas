@@ -6,6 +6,7 @@ interface ITransaction {
     description: String;
     value: Number;
     category: String;
+    action: String;
     date: String;
 }
 
@@ -14,13 +15,14 @@ interface ITransactionDelete {
 }
 
 class TransactionRepository {
-    async saveTransaction({ description, value, category, date }: ITransaction): Promise<any> {
+    async saveTransaction({ description, value, category, action, date }: ITransaction): Promise<any> {
         const connection = await connect();
 
         const newTransaction = {
             description,
             value,
             category,
+            action,
             date
         }
         
@@ -29,13 +31,14 @@ class TransactionRepository {
         return "Transaction created";
     }
 
-    async updateTransaction({ description, value, category, date, id }: ITransaction): Promise<any> {
+    async updateTransaction({ description, value, category, action, date, id }: ITransaction): Promise<any> {
         const connection = await connect();
 
         const updatedTransaction = {
             description,
             value,
             category,
+            action,
             date
         }
         

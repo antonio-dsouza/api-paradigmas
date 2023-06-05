@@ -6,7 +6,11 @@ import dotenv from "dotenv";
 
 dotenv.config();
 const app = express();
-app.use(cors());
+app.use(cors({
+    origin: '*',
+    optionsSuccessStatus: 200
+}));
+// app.options('*', cors())
 
 const serverHttp = http.createServer(app);
 

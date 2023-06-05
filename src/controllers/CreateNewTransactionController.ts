@@ -3,11 +3,11 @@ import { CreateNewTransactionService } from "../services/CreateNewTransactionSer
 
 class CreateNewTransactionController {
     async handle(request: Request, response: Response) {
-        const { description, value, category, date } = request.body;
+        const { description, value, category, action, date } = request.body;
 
         const createNewTransactionService = new CreateNewTransactionService();
     
-        const results = await createNewTransactionService.execute({ description, value, category, date });
+        const results = await createNewTransactionService.execute({ description, value, category, action, date });
     
         return response.json(results);
     }

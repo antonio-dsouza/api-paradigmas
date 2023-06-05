@@ -3,11 +3,11 @@ import { UpdateTransactionService } from "../services/UpdateTransactionService";
 
 class UpdateTransactionController {
     async handle(request: Request, response: Response) {
-        const { description, value, category, date, id } = request.body;
+        const { description, value, category, action, date, id } = request.body;
 
         const updateTransactionService = new UpdateTransactionService();
     
-        const results = await updateTransactionService.execute({ description, value, category, date, id });
+        const results = await updateTransactionService.execute({ description, value, category, action, date, id });
     
         return response.json(results);
     }
