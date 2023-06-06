@@ -1,0 +1,26 @@
+[
+  {
+    "id": 1,
+    "description": "Saque no banco",
+    "value": "100",
+    "category": "Banco",
+    "action": "Entrada",
+    "date": "2023-05-15"
+  },
+  {
+    "id": 2,
+    "description": "Pagamento seguro carro",
+    "value": "560",
+    "category": "Pagamento",
+    "action": "Saída",
+    "date": "2023-06-05"
+  },
+  {
+    "id": 3,
+    "description": "Salario",
+    "value": "2000",
+    "category": "Salario",
+    "action": "Entrada",
+    "date": "2023-06-05"
+  }
+]

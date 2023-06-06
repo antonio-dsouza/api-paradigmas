@@ -1,59 +1,90 @@
+import fs from 'fs';
+
 interface ITransaction {
-    id?: Number;
-    description: String;
-    value: Number;
-    category: String;
-    date: String;
+  id?: Number;
+  description: String;
+  value: Number;
+  category: String;
+  action: String;
+  date: String;
 }
 
 interface ITransactionDelete {
-    id?: Number;
+  id?: Number;
 }
 
-const transactions: ITransaction[] = [];
+let transactions: ITransaction[] = [];
 let lastTransactionId = 0;
 
 class TransactionRepositoryLocal {
-    async saveTransaction({ description, value, category, date }: ITransaction): Promise<any> {
-        const newTransaction = {
-            id: ++lastTransactionId,
-            description,
-            value,
-            category,
-            date
-        }
-        
-        transactions.push(newTransaction);
+  transactionsFilePath = 'transactions.json';
 
-        return "Transaction created";
+  async saveTransaction({ description, value, category, action, date }: ITransaction): Promise<string> {
+    const newTransaction: ITransaction = {
+      id: ++lastTransactionId,
+      description,
+      value,
+      category,
+      action,
+      date,
+    };
+
+    transactions.push(newTransaction);
+    await this.saveTransactionsToFile();
+    return 'Transaction created';
+  }
+
+  async updateTransaction({ description, value, category, action, date, id }: ITransaction): Promise<string> {
+    const transaction = transactions.find((t) => t.id === id);
+    if (transaction) {
+      transaction.description = description;
+      transaction.value = value;
+      transaction.category = category;
+      transaction.action = action;
+      transaction.date = date;
+      await this.saveTransactionsToFile();
+      return 'Transaction updated';
     }
 
-    async updateTransaction({ description, value, category, date, id }: ITransaction): Promise<any> {
-        const transaction = transactions.find((t) => t.id === id);
-        if (transaction) {
-            transaction.description = description;
-            transaction.value = value;
-            transaction.category = category;
-            transaction.date = date;
-            return "Transaction updated";
-        }
+    return 'Transaction not found';
+  }
 
-        return "Transaction not found";
+  async deleteTransaction({ id }: ITransactionDelete): Promise<string> {
+    const index = transactions.findIndex((t) => t.id === id);
+    if (index !== -1) {
+      transactions.splice(index, 1);
+      await this.saveTransactionsToFile();
+      return 'Transaction deleted';
     }
 
-    async deleteTransaction({ id }: ITransactionDelete): Promise<any> {
-        const index = transactions.findIndex((t) => t.id === id);
-        if (index !== -1) {
-            transactions.splice(index, 1);
-            return "Transaction deleted";
-        }
+    return 'Transaction not found';
+  }
 
-        return "Transaction not found";
-    }
+  async getTransactions(): Promise<ITransaction[]> {
+    await this.loadTransactionsFromFile();
+    return transactions;
+  }
 
-    async getTransactions(): Promise<any> {
-        return transactions;
+  private async saveTransactionsToFile(): Promise<any> {
+    try {
+      await fs.promises.writeFile(
+        this.transactionsFilePath,
+        JSON.stringify(transactions, null, 2)
+      );
+    } catch (error) {
+      return 'Error saving transactions to file: ' + error;
     }
+  }
+
+  private async loadTransactionsFromFile(): Promise<any> {
+    try {
+      const fileContent = await fs.promises.readFile(this.transactionsFilePath, 'utf8');
+      transactions = JSON.parse(fileContent);
+      lastTransactionId = transactions.length;
+    } catch (error) {
+      return 'Error loading transactions from file:' + error;
+    }
+  }
 }
 
-export { TransactionRepositoryLocal }
+export { TransactionRepositoryLocal };
